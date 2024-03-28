@@ -3,7 +3,7 @@ import { TextField, TextArea, Button, Callout } from "@radix-ui/themes"
 import { useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-import Spinner from "@/components/spinner"
+import Spinner from "@/components/Spinner"
 
 const NewIssue = () => {
   const router = useRouter()
