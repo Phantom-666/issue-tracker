@@ -3,6 +3,7 @@ import { TextField, TextArea, Button, Callout } from "@radix-ui/themes"
 import { useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import Spinner from "@/components/spinner"
 
 const NewIssue = () => {
   const router = useRouter()
@@ -10,16 +11,19 @@ const NewIssue = () => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [error, setError] = useState("")
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const submitForm = async () => {
     const obj = { title, description }
 
     try {
+      setIsSubmitted(true)
       await axios.post("/api/issues", obj)
       router.push("/issues")
     } catch (error) {
       console.log(error)
       setError("An unexpected error")
+      setIsSubmitted(false)
     }
   }
 
@@ -42,7 +46,9 @@ const NewIssue = () => {
         </Callout.Root>
       )}
 
-      <Button onClick={submitForm}>Submit new issue</Button>
+      <Button disabled={isSubmitted} onClick={submitForm}>
+        Submit new issue {isSubmitted && <Spinner />}
+      </Button>
     </div>
   )
 }
