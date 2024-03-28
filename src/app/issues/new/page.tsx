@@ -1,5 +1,5 @@
 "use client"
-import { TextField, TextArea, Button } from "@radix-ui/themes"
+import { TextField, TextArea, Button, Callout } from "@radix-ui/themes"
 import { useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
@@ -9,13 +9,18 @@ const NewIssue = () => {
 
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [error, setError] = useState("")
 
   const submitForm = async () => {
     const obj = { title, description }
 
-    await axios.post("/api/issues", obj)
-
-    router.push("/issues")
+    try {
+      await axios.post("/api/issues", obj)
+      router.push("/issues")
+    } catch (error) {
+      console.log(error)
+      setError("An unexpected error")
+    }
   }
 
   return (
@@ -30,6 +35,13 @@ const NewIssue = () => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
+
+      {error && (
+        <Callout.Root color="red">
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
+
       <Button onClick={submitForm}>Submit new issue</Button>
     </div>
   )
